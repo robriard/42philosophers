@@ -6,7 +6,7 @@
 #    By: robriard <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/13 11:21:40 by robriard          #+#    #+#              #
-#    Updated: 2021/07/13 11:34:40 by robriard         ###   ########.fr        #
+#    Updated: 2021/07/13 13:19:01 by robriard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ FALGS = -Wall -Wextra -Werror
 
 FILES =	main.c
 
-SRCS = $(addprefix "./srcs/", $(FILES))
+SRCS = $(addprefix ./srcs/, $(FILES))
 OBJS = ${SRCS:.c=.o}
 
 all: ${OBJS}
