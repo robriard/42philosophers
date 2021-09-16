@@ -6,16 +6,16 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:25:26 by robriard          #+#    #+#             */
-/*   Updated: 2021/08/16 12:21:54 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/13 15:34:07 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_ms	ft_atoi(const char *s)
+time_t	ft_atoi(const char *s)
 {
-	int			signe;
-	t_ms		result;
+	int		signe;
+	time_t	result;
 
 	result = 0;
 	signe = 1;
@@ -53,21 +53,53 @@ int	is_num(const char *s)
 	return (0);
 }
 
-void	clean_philo(t_philo **philo, int pop)
+void	clean_philo(t_philo *philo, pthread_t *thread, int index, int pop)
 {
 	int	i;
 
 	i = 0;
-	while (i <= pop)
+	while (i < pop)
 	{
-		if (philo[i]->rfork)
-			free(philo[i]->rfork);
-		if (philo[i]->printer)
-			free(philo[i]->printer);
-		if (philo[i])
-			free(philo[i]);
+		if (philo->rfork)
+			free(philo->rfork);
+		if (philo->printer)
+			free(philo->printer);
+		if (i < index)
+			pthread_detach(thread[i]);
 		i++;
 	}
 	free(philo);
-	exit_(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
+}
+
+void detach(int pop, t_philo *philo, pthread_t *threads)
+{
+	int	i;
+
+	i = 0;
+	while (i < pop)
+	{
+		if (philo[i].state == Alive)
+		{
+			philo[i].state = Finished;
+			pthread_detach(threads[i]);
+		}
+		i++;
+	}
+}
+
+time_t	get_time()
+{
+	struct timeval tv;
+	
+	if (gettimeofday(&tv, NULL) == -1)
+		return (0);
+	return ((tv.tv_sec * 0.001) + (tv.tv_usec * 1000) - g_time);
+}
+
+void	print(t_mutex *mutex, const char *str, int id)
+{
+	pthread_mutex_lock(mutex);
+	printf(str, get_time() / 1000, id);
+	pthread_mutex_lock(mutex);
 }
