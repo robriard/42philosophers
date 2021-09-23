@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:25:26 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/13 15:34:07 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/22 10:42:10 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ void	clean_philo(t_philo *philo, pthread_t *thread, int index, int pop)
 		if (philo->printer)
 			free(philo->printer);
 		if (i < index)
+		{
+			philo->state = Finished;
 			pthread_detach(thread[i]);
+		}
 		i++;
 	}
 	free(philo);
@@ -92,14 +95,28 @@ time_t	get_time()
 {
 	struct timeval tv;
 	
+	// printf("[%lu]\n", g_time);
 	if (gettimeofday(&tv, NULL) == -1)
 		return (0);
 	return ((tv.tv_sec * 0.001) + (tv.tv_usec * 1000) - g_time);
+}
+
+int ft_usleep(useconds_t usec)
+{
+	printf("[%u]\n", usec);
+	time_t start;
+	
+	start = get_time();
+	while (get_time() - start < usec)
+	{
+		usleep(10);
+	}
+	return (RETURN_SUCCESS);
 }
 
 void	print(t_mutex *mutex, const char *str, int id)
 {
 	pthread_mutex_lock(mutex);
 	printf(str, get_time() / 1000, id);
-	pthread_mutex_lock(mutex);
+	pthread_mutex_unlock(mutex);
 }

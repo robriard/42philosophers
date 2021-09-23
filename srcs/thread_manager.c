@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/01 10:24:21 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/20 13:24:59 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ void	thread_manager(int pop, t_args args)
 	i = 0;
 	while (i < pop)
 	{
-		printf("%d\n", philo[i].id);
+		//printf("%d\n", philo[i].id);
 		if (pthread_create(&thread[i], NULL, daily_actions, &philo[i]))
 			clean_philo(philo, thread, i, pop);
 		i++;
 	}
 	if (wait_end(pop, philo))
 		write(1, "Error\n", 6);
-	//detach(pop, philo, thread);
-	read(0, NULL, 42);
+	detach(pop, philo, thread);
+	//read(0, NULL, 42);
 }

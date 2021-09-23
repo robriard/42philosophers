@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/01 10:26:43 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/22 10:39:16 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ static t_philo	set_philo(int index, t_args arg, t_mutex *print, t_mutex *fork)
 	dst.max_laps = arg.max_laps;
 	dst.state = Alive;
 	dst.rfork = malloc(sizeof(t_mutex));
-	if (!dst.rfork)
+	if (!dst.rfork || pthread_mutex_init(dst.rfork, NULL))
 			exit_(EXIT_FAILURE);
 	if (index == 0)
 	{
+		dst.lfork = NULL;
 		dst.printer = malloc(sizeof(t_mutex));
-		if (!dst.printer)
+		if (!dst.printer|| pthread_mutex_init(dst.printer, NULL))
 			exit_(EXIT_FAILURE);
 	}
 	else if (index != 0)
@@ -55,8 +56,11 @@ t_philo *set_pop(int pop, t_args args)
 		else
 			dst[i] = set_philo(i, args, dst[0].printer, dst[i - 1].rfork);
 		if (i == pop - 1)
+		{
 			dst[0].lfork = dst[i].rfork;
-		i++;
+			printf("[%p]\n", dst[0].lfork);
+		}
+		i++; 
 	}
 	return (dst);
 }
@@ -70,6 +74,7 @@ int medic(t_philo *philo)
 		pthread_mutex_lock(philo->printer);
 		printf("%lu: %d died\n", get_time() / 1000, philo->id);
         philo->state = Dead;
+		pthread_mutex_unlock(philo->printer);
 	}
     return (RETURN_SUCCESS);
 }

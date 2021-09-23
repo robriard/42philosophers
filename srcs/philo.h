@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/15 17:24:57 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/21 14:19:50 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <sys/time.h>
 # include <time.h>
 # include <pthread.h>
+# include <sys/types.h>
 
 # ifndef RETURNS
 #  define RETURNS
@@ -62,6 +63,7 @@ typedef struct s_philo
 /*
  *		TOOLS
  */
+int 	ft_usleep(useconds_t usec);
 int		is_num(const char *s);
 void 	detach(int pop,t_philo *philo, pthread_t *threads);
 void	clean_philo(t_philo *philos, pthread_t *thread, int index, int pop);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: robriard <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: robriard <robriard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/13 11:21:40 by robriard          #+#    #+#              #
-#    Updated: 2021/07/13 13:19:01 by robriard         ###   ########.fr        #
+#    Updated: 2021/09/20 13:21:21 by robriard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,23 +26,39 @@ NAME = philo
 CC = gcc
 FALGS = -Wall -Wextra -Werror
 
-FILES =	main.c
+FILES =	main.c 				\
+		daily_actions.c 	\
+		medic.c 			\
+		thread_manager.c 	\
+		tools.c 			
 
 SRCS = $(addprefix ./srcs/, $(FILES))
 OBJS = ${SRCS:.c=.o}
+DEP = $(OBJS:%.o=%.d)
 
-all: ${OBJS}
+-include $(DEP)
+%.o: %.c
+	@printf "\e[2K\r- $@ [🔄]"
+	@$(CC) $(FLAGS) -MMD -o $@ -c $<
+	@printf "\e[2K\r- $@ [✅]\n"
+
+${NAME}: ${OBJS}
 	@${CC} ${FLAGS} ${OBJS}  -o ${NAME}
 	@echo "${GREEN}Compilation OK${RESET}"
 
+all: ${NAME}
+
 clean:
 	@echo "${RED}deleting ojbects${RESET}"
-	@${RM}	${OBJS}
+	@${RM}	${OBJS} ${DEP}
 
 fclean:  clean
 	@echo "${RED}deleting executable${RESET}"
 	@${RM} ${NAME}
 
-re: fclean all clean
+re: fclean all
 
 .PHONY: all clean fclean re 
+
+
+# ✅ ❌ 🔄
