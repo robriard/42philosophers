@@ -19,48 +19,82 @@ void	exit_(int status)
 	exit(status);
 }
 
-static int	parser(int ac, char **args, t_args *struc)
+static int	set_env_n_first(t_philo	*philo, int pop, int ac, char **av)
 {
-	int		i;
-	time_t	buf[4];
+	philo->id = 1;
+	philo->rfork = malloc(sizeof(t_mutex));
+	if (!philo->rfork || pthread_mutex_init(philo->rfork, NULL))
+		return (EXIT_FAILURE);
+	if (ac == 5)
+		philo->max_laps = ft_atoi(av[4]);
+	else
+		philo->max_laps = -1;
+	if (philo->max_laps == 0 || philo->max_laps < -1)
+		return (EXIT_FAILURE);
+	philo->env = malloc(sizeof(t_env));
+	if (!philo->env || pthread_mutex_init(&philo->env->state_mutex, NULL))
+		return (EXIT_FAILURE);
+	philo->env->die = ft_atoi(av[1]);
+	philo->env->eat = ft_atoi(av[2]);
+	philo->env->sleep = ft_atoi(av[3]);
+	philo->env->state = Alive;
+	philo->env->pop = pop;
+	return (EXIT_SUCCESS);
+}
 
-	i = 0;
-	while (i < 4)
+static int	set_pop(t_philo *philo, int pop, int index)
+{
+	if (pop == index)
 	{
-		buf[i] = -1;
-		i++;
+		philo[0].lfork = philo[index -1].rfork;
+		return (EXIT_SUCCESS);
 	}
-	i = 1;
-	while (args[i])
-	{
-		if (is_num(args[i]))
-			return (RETURN_ERROR);
-		buf[i - 1] = ft_atoi(args[i]);
-		if (buf[i - 1] <= 0)
-			return (RETURN_ERROR);
-		i++;
-	}
-	if (ac == 6 && buf[3] <= 0)
-		return (RETURN_ERROR);
-	struc->die = buf[0] * 1000;
-	struc->eat = buf[1] * 1000;
-	struc->sleep = buf[2] * 1000;
-	struc->max_laps = (long int)buf[3];
-	return ((int)ft_atoi(args[0]));
+	philo[index].id = index + 1;
+	philo[index].max_laps = philo[index - 1].max_laps;
+	philo[index].lfork = philo[index - 1].rfork;
+	philo[index].rfork = malloc(sizeof(t_mutex));
+	if (!philo[index].rfork || pthread_mutex_init(philo[index].rfork, NULL))
+		return (EXIT_FAILURE);
+	philo[index].env = philo[index -1].env;
+	return (set_pop(philo, pop, index + 1));
+}
+
+static t_philo	*init(int ac, char **av)
+{
+	t_philo	*philo;
+	int		pop;
+
+	pop = (int)ft_atoi(av[0]);
+	if (pop < 0 || pop > 300)
+		return (NULL);
+	philo = malloc(sizeof(t_philo) * pop);
+	if (!philo || set_env_n_first(&philo[0], pop, ac, av))
+		return (NULL);
+	if (set_pop(philo, pop, 1))
+		return (NULL);
+	return (philo);
+}
+
+
+static void print_philos(t_philo *philo)
+{
+	printf("===== [%d] =====\n", philo->id);
+	printf("[%ld]\n[%p]\n[%p]\n\n", philo->max_laps, philo->lfork, philo->rfork);
+	printf("[%d]\n[%lu]\n[%lu]\n[%lu]\n[%u]\n", philo->env->pop, philo->env->die, philo->env->eat, philo->env->sleep, philo->env->state);
+	if (philo->env->pop == philo->id)
+		return ;
+	print_philos(philo + 1);
 }
 
 int	main(int ac, char **av)
 {
-	t_args		args;
-	int			pop;
+	t_philo	*philo;
 
-	g_time = 0;
-	g_time = get_time();
 	if (ac != 5 && ac != 6)
 		exit_(EXIT_FAILURE);
-	pop = parser(ac, av + 1, &args);
-	if (pop <= 0)
+	philo = init(ac - 1, av + 1);
+	if (!philo)
 		exit_(EXIT_FAILURE);
-	thread_manager(pop, args);
-	return (0);
+	print_philos(philo);
+	return (EXIT_SUCCESS);
 }
