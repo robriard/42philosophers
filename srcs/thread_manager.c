@@ -6,52 +6,53 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/20 13:24:59 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:09:18 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int wait_end(int pop, t_philo *philo)
+void	*daily_actions(void *arg)
 {
-	int i;
-	int ret;
+	t_philo	*philo;
 
+	philo = (t_philo *)arg;
 	while (1)
 	{
-		i = 0;
-		while (i < pop && !medic(&philo[i]))
-		{
-			ret = medic(&philo[i]);
-			if (ret == -1)
-				return (RETURN_ERROR);
-			if (philo[i].state != Alive)
-				return (RETURN_SUCCESS);
-			i++;
-		}
+		if (statecmp(*philo, Alive))
+			break;		
 	}
 }
 
-void	thread_manager(int pop, t_args args)
+static int	cleanup(pthread_t *thread, int index)
 {
-	pthread_t	*thread;
-	t_philo		*philo;
-	int			i;
+	int	i;
 
-	thread = malloc(sizeof(pthread_t) * pop);
-	philo = set_pop(pop, args);
-	if (!philo || !thread)
-		exit_(EXIT_FAILURE);
 	i = 0;
-	while (i < pop)
+	while (i < index)
 	{
-		//printf("%d\n", philo[i].id);
-		if (pthread_create(&thread[i], NULL, daily_actions, &philo[i]))
-			clean_philo(philo, thread, i, pop);
+		pthread_detach(thread[i]);
 		i++;
 	}
-	if (wait_end(pop, philo))
-		write(1, "Error\n", 6);
-	detach(pop, philo, thread);
-	//read(0, NULL, 42);
+	return (EXIT_FAILURE);
+}
+
+int	thread_manager(t_philo *philo)
+{
+	pthread_t	threads;
+	int			i;
+
+	threads = malloc(sizeof(pthread_t) * philo[0].env->pop);
+	if (!threads)
+		return (EXIT_FAILURE);
+	philo[0].env->time_start = get_time(0);
+	i = 0;
+	while (i < philo[0].env->pop)
+	{
+		if (pthread_create(&threads[i], NULL, daily_actions, &philo[i]));
+			return (cleanup(threads, i));
+		i++;
+	}
+
+	return (EXIT_SUCCESS);
 }

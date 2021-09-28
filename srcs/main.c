@@ -6,11 +6,21 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:37:19 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/21 14:18:09 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/27 22:26:18 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void print_philos(t_philo *philo)
+{
+	printf("===== [%d] =====\n", philo->id);
+	printf("[%ld]\n[%p]\n[%p]\n\n", philo->max_laps, philo->lfork, philo->rfork);
+	printf("[%d]\n[%lu]\n[%lu]\n[%lu]\n[%u]\n", philo->env->pop, philo->env->die, philo->env->eat, philo->env->sleep, philo->env->state);
+	if (philo->env->pop == philo->id)
+		return ;
+	print_philos(philo + 1);
+}
 
 void	exit_(int status)
 {
@@ -33,6 +43,8 @@ static int	set_env_n_first(t_philo	*philo, int pop, int ac, char **av)
 		return (EXIT_FAILURE);
 	philo->env = malloc(sizeof(t_env));
 	if (!philo->env || pthread_mutex_init(&philo->env->state_mutex, NULL))
+		return (EXIT_FAILURE);
+	if (pthread_mutex_init(&philo->env->printer, NULL))
 		return (EXIT_FAILURE);
 	philo->env->die = ft_atoi(av[1]);
 	philo->env->eat = ft_atoi(av[2]);
@@ -75,17 +87,6 @@ static t_philo	*init(int ac, char **av)
 	return (philo);
 }
 
-
-static void print_philos(t_philo *philo)
-{
-	printf("===== [%d] =====\n", philo->id);
-	printf("[%ld]\n[%p]\n[%p]\n\n", philo->max_laps, philo->lfork, philo->rfork);
-	printf("[%d]\n[%lu]\n[%lu]\n[%lu]\n[%u]\n", philo->env->pop, philo->env->die, philo->env->eat, philo->env->sleep, philo->env->state);
-	if (philo->env->pop == philo->id)
-		return ;
-	print_philos(philo + 1);
-}
-
 int	main(int ac, char **av)
 {
 	t_philo	*philo;
@@ -95,6 +96,7 @@ int	main(int ac, char **av)
 	philo = init(ac - 1, av + 1);
 	if (!philo)
 		exit_(EXIT_FAILURE);
-	print_philos(philo);
+	thread_manager(philo);
+	// print_philos(philo);
 	return (EXIT_SUCCESS);
 }

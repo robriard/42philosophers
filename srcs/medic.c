@@ -6,75 +6,42 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/22 10:39:16 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:07:10 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static t_philo	set_philo(int index, t_args arg, t_mutex *print, t_mutex *fork)
+int statecmp(t_philo philo, int value)
 {
-	t_philo dst;
-
-	dst.id = index + 1;
-	dst.die = arg.die;
-	dst.eat = arg.eat;
-	dst.sleep = arg.sleep;
-	dst.max_laps = arg.max_laps;
-	dst.state = Alive;
-	dst.rfork = malloc(sizeof(t_mutex));
-	if (!dst.rfork || pthread_mutex_init(dst.rfork, NULL))
-			exit_(EXIT_FAILURE);
-	if (index == 0)
+	pthread_mutex_lock(&philo.env->state_mutex);
+	if (philo.env->state != value)
 	{
-		dst.lfork = NULL;
-		dst.printer = malloc(sizeof(t_mutex));
-		if (!dst.printer|| pthread_mutex_init(dst.printer, NULL))
-			exit_(EXIT_FAILURE);
+		pthread_mutex_unlock(&philo.env->state_mutex);
+		return (EXIT_FAILURE);
 	}
-	else if (index != 0)
-	{
-		dst.printer = fork;
-		dst.printer = print;
-	}
-	return (dst);
+	pthread_mutex_unlock(&philo.env->state_mutex);
+	return (EXIT_SUCCESS);
 }
 
-t_philo *set_pop(int pop, t_args args)
+void stateedt(t_philo *philo, int value)
 {
-	t_philo	*dst;
-	int		i;
-
-	dst = malloc(sizeof(t_philo) * pop);
-	if (!dst)
-		return NULL;
-	i = 0;
-	while (i < pop)
-	{
-		if (i == 0)
-			dst[i] = set_philo(i, args, NULL, NULL);
-		else
-			dst[i] = set_philo(i, args, dst[0].printer, dst[i - 1].rfork);
-		if (i == pop - 1)
-		{
-			dst[0].lfork = dst[i].rfork;
-			printf("[%p]\n", dst[0].lfork);
-		}
-		i++; 
-	}
-	return (dst);
+	pthread_mutex_lock(&philo->env->state_mutex);
+	philo->env->state = value;
+	pthread_mutex_unlock(&philo->env->state_mutex);
 }
 
 int medic(t_philo *philo)
 {
-	time_t now = get_time();
-//	printf("[%lu] <=> [%lu]\n", now, philo->die);
-    if (now - philo->last_meal > philo->die)
+	int i;
+
+	i = 0;
+	while (i < philo[i].env->pop)
 	{
-		pthread_mutex_lock(philo->printer);
-		printf("%lu: %d died\n", get_time() / 1000, philo->id);
-        philo->state = Dead;
-		pthread_mutex_unlock(philo->printer);
+		if (!statecmp(philo[i], Alive))
+			break;
+		if (get_time(philo[i].env->time_start) - philo[i].last_meal > philo[i].env->die)
+			stateedt(&philo[i], Dead);
+		i += (i + 1) % philo[i].env->pop;
 	}
-    return (RETURN_SUCCESS);
 }

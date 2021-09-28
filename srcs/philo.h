@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/21 14:19:50 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:08:27 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ typedef	enum e_state
 
 typedef struct s_env
 {
-	int			pop;
-	time_t		time_start;
-	time_t		die;
-	time_t		eat;
-	time_t		sleep;
-	t_state		state;
-	t_mutex		state_mutex;
+	int		pop;
+	time_t	time_start;
+	time_t	die;
+	time_t	eat;
+	time_t	sleep;
+	t_state	state;
+	t_mutex	state_mutex;
+	t_mutex	printer;
 }				t_env;
 
 typedef struct s_philo
@@ -55,13 +56,19 @@ typedef struct s_philo
 /*
  *		TOOLS
  */
-//int 	ft_usleep(useconds_t usec);
+int 	ft_usleep(useconds_t usec);
 int		is_num(const char *s);
 void	exit_(int status);
+void	print(t_philo *philo, char *msg, time_t now);
 time_t	ft_atoi(const char *s);
+time_t	get_time(time_t start_time);
 
 /*
  *		PHILO
  */
+void 	stateedt(t_philo *philo, int value);
+int 	statecmp(t_philo philo, int value);
+int		thread_manager(t_philo *philo);
+int		medic(t_philo *philo);
 
 #endif

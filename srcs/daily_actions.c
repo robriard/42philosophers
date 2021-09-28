@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 14:09:23 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/22 10:43:03 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 11:18:53 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 static void 	eating(t_philo *philo)
 {
 	pthread_mutex_lock(philo->rfork);
-	//print(philo->printer, "%lu: %d has taken a fork\n", philo->id);
+	print(philo, "%d has taken a fork\n", get_time(philo->env->time_start));
 	if (philo->lfork)
 		pthread_mutex_lock(philo->lfork);
-	//print(philo->printer, "%lu: %d has taken a fork\n", philo->id);
-	philo->last_meal = get_time();
-	//print(philo->printer, "%lu: %d is eating\n", philo->id);
-	ft_usleep(philo->eat);
+	print(philo, "%d has taken a fork\n", get_time(philo->env->time_start));
+	philo->last_meal = get_time(philo->env->time_start);
+	print(philo, "%d is eating\n", get_time(philo->env->time_start));
+	ft_usleep(philo->env->eat);
 	if (philo->max_laps > 0)
 		philo->max_laps--;
 	if (philo->max_laps == 0)
-		philo->state = Finished;
+		philo->env->state = Finished;
 	if (philo->lfork)
 		pthread_mutex_unlock(philo->lfork);
 	pthread_mutex_unlock(philo->rfork);
@@ -33,8 +33,8 @@ static void 	eating(t_philo *philo)
 
 static void sleeping(t_philo *philo)
 {
-	//print(philo->printer, "%lu: %d is sleeping\n", philo->id);
-	ft_usleep(philo->sleep);
+	print(philo, "%d is sleeping\n", get_time(philo->env->time_start));
+	ft_usleep(philo->env->sleep);
 }
 
 void	*daily_actions(void *arg)
@@ -43,16 +43,21 @@ void	*daily_actions(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *) arg;
-	philo->last_meal = get_time();
-	while (philo->state == Alive)
+	philo->last_meal = get_time(philo->env->time_start);
+	while (1)
 	{
+		pthread_mutex_lock(&philo->env->state_mutex);
+		if (!philo->env->state != Alive)
+			break;
+		pthread_mutex_unlock(&philo->env->state_mutex);
 		// write(2, "test: before eating\n", 20);
 		eating(philo);
 		// write(2, "test: before sleeping\n", 22);
 		sleeping(philo);
 		// write(2, "test: after sleeping\n", 21);
-		//print(philo->printer, "%lu: %d is thinking\n", philo->id);
+		print(philo, "%d is thinking\n", get_time(philo->env->time_start));
 	}
+	pthread_mutex_unlock(&philo->env->state_mutex);
 	return (NULL);
 }
 

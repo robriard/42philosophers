@@ -6,11 +6,21 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:25:26 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/22 10:42:10 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 11:16:05 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int ft_strlen(const char *str)
+{
+	int len;
+
+	len = 0;
+	while (str[len])
+		len++;
+	return (len);
+}
 
 time_t	ft_atoi(const char *s)
 {
@@ -51,4 +61,54 @@ int	is_num(const char *s)
 		i++;
 	}
 	return (0);
+}
+
+char		*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*dst;
+	int		i;
+	int		j;
+
+	dst = malloc(sizeof(char) * (1 + ft_strlen(s1) + ft_strlen(s2)));
+	if (!dst)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		dst[i + j] = s2[j];
+		j++;
+	}
+	dst[i + j] = '\0';
+	return (dst);
+}
+
+void	print(t_philo *philo, char *msg, time_t now)
+{
+
+	pthread_mutex_lock(&philo->env->state_mutex);
+	if (philo->env->state != Alive)
+	{
+		pthread_mutex_unlock(&philo->env->state_mutex);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->env->state);
+	msg = ft_strjoin("%lu: ", msg);
+	pthread_mutex_lock(&philo->env->printer);
+	printf(msg, now, philo->id);
+	pthread_mutex_unlock(&philo->env->printer);
+	free(msg);
+}
+
+time_t get_time(time_t start)
+{
+	struct timeval tv;
+	if (gettimeofday(&tv.tv_sec, &tv.tv_usec) == -1)
+		return (-1);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000) - start);
 }
