@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:25:26 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/28 11:16:05 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 19:00:56 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	print(t_philo *philo, char *msg, time_t now)
 		pthread_mutex_unlock(&philo->env->state_mutex);
 		return ;
 	}
-	pthread_mutex_unlock(&philo->env->state);
+	pthread_mutex_unlock(&philo->env->state_mutex);
 	msg = ft_strjoin("%lu: ", msg);
 	pthread_mutex_lock(&philo->env->printer);
 	printf(msg, now, philo->id);
@@ -108,7 +108,16 @@ void	print(t_philo *philo, char *msg, time_t now)
 time_t get_time(time_t start)
 {
 	struct timeval tv;
-	if (gettimeofday(&tv.tv_sec, &tv.tv_usec) == -1)
+	if (gettimeofday(&tv, NULL) == -1)
 		return (-1);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000) - start);
+	return (tv.tv_sec / 1000 + tv.tv_usec * 1000 - start);
+}
+
+int	ft_usleep(t_philo *philo, time_t usec)
+{
+	time_t start;
+	start = get_time(philo->env->time_start);
+	while (get_time(philo->env->time_start) - start < usec)
+		usleep(10);
+	return (EXIT_SUCCESS);
 }

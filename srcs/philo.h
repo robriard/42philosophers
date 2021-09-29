@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/28 12:08:27 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:54:19 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_philo
 /*
  *		TOOLS
  */
-int 	ft_usleep(useconds_t usec);
+int	ft_usleep(t_philo *philo, time_t usec);
 int		is_num(const char *s);
 void	exit_(int status);
 void	print(t_philo *philo, char *msg, time_t now);
@@ -66,6 +66,7 @@ time_t	get_time(time_t start_time);
 /*
  *		PHILO
  */
+void	*daily_actions(void *arg);
 void 	stateedt(t_philo *philo, int value);
 int 	statecmp(t_philo philo, int value);
 int		thread_manager(t_philo *philo);

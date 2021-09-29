@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/28 12:07:10 by robriard         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:59:21 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,16 @@ int medic(t_philo *philo)
 	int i;
 
 	i = 0;
-	while (i < philo[i].env->pop)
+	while (i <= 0)
 	{
 		if (!statecmp(philo[i], Alive))
 			break;
 		if (get_time(philo[i].env->time_start) - philo[i].last_meal > philo[i].env->die)
+		{
+			print(philo, "%d died", get_time(philo->env->time_start));
 			stateedt(&philo[i], Dead);
+		}
 		i += (i + 1) % philo[i].env->pop;
 	}
+	return (0);
 }
