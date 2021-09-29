@@ -110,7 +110,7 @@ time_t get_time(time_t start)
 	struct timeval tv;
 	if (gettimeofday(&tv, NULL) == -1)
 		return (-1);
-	return (tv.tv_sec / 1000 + tv.tv_usec * 1000 - start);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000 - start);
 }
 
 int	ft_usleep(t_philo *philo, time_t usec)

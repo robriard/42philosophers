@@ -36,16 +36,17 @@ int medic(t_philo *philo)
 	int i;
 
 	i = 0;
-	while (i <= 0)
+	
+	while (i >= 0)
 	{
-		if (!statecmp(philo[i], Alive))
-			break;
 		if (get_time(philo[i].env->time_start) - philo[i].last_meal > philo[i].env->die)
 		{
-			print(philo, "%d died", get_time(philo->env->time_start));
+			print(&philo[i], "%d died\n", get_time(philo->env->time_start));
 			stateedt(&philo[i], Dead);
 		}
-		i += (i + 1) % philo[i].env->pop;
+		if (statecmp(philo[i], Alive))
+			break;
+		i = (i + 1) % philo[i].env->pop;
 	}
 	return (0);
 }

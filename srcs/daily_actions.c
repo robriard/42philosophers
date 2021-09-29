@@ -39,15 +39,24 @@ static void sleeping(t_philo *philo)
 
 void	*daily_actions(void *arg)
 {
+	
 	t_philo	*philo;
 
 	philo = (t_philo *) arg;
+	if (philo->env->pop % 2 == 0 && philo->id % 2 == 1) 
+		ft_usleep(philo, 1);
+	else
+	{
+		if (philo->id % 3 == 1)
+			ft_usleep(philo, philo->env->eat);
+		else if (philo->id % 2 == 2)
+			ft_usleep(philo, 2 * philo->env->eat);
+	}
 	philo->last_meal = get_time(philo->env->time_start);
 	while (1)
 	{
 		if (statecmp(*philo, Alive))
 			break;
-		pthread_mutex_unlock(&philo->env->state_mutex);
 		eating(philo);
 		sleeping(philo);
 		print(philo, "%d is thinking\n", get_time(philo->env->time_start));
