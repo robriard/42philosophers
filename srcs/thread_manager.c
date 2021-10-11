@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/09/28 18:56:02 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/08 18:10:10 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	cleanup(pthread_t *thread, int index)
 	i = 0;
 	while (i < index)
 	{
-		pthread_detach(thread[i]);
+		pthread_join(thread[i], NULL);
 		i++;
 	}
 	return (EXIT_FAILURE);
@@ -42,5 +42,6 @@ int	thread_manager(t_philo *philo)
 		i++;
 	}
 	medic(philo);
+	cleanup(threads, philo[0].env->pop);
 	return (EXIT_SUCCESS);
 }
