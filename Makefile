@@ -6,7 +6,7 @@
 #    By: robriard <robriard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/13 11:21:40 by robriard          #+#    #+#              #
-#    Updated: 2021/10/11 14:41:35 by robriard         ###   ########.fr        #
+#    Updated: 2021/10/11 14:43:26 by robriard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ endif
 
 NAME = philo
 CC = gcc
-FALGS = -pthread -lpthread -Wall -Wextra -Werror
+FLAGS = -pthread -lpthread -Wall -Wextra -Werror
 
 FILES =	main.c 				\
 		daily_actions.c 	\
