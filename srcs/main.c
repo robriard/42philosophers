@@ -6,22 +6,11 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 15:52:25 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 14:44:16 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 16:45:11 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-// static void print_philos(t_philo *philo)
-// {
-// 	printf("===== [%d] =====\n", philo->id);
-// 	printf("[%ld]\n[%p]\n[%p]\n\n", philo->max_laps, philo->lfork, philo->rfork);
-// 	printf("[%d]\n[%lu]\n[%lu]\n[%lu]\n[%u]\n", philo->env->pop, philo->env->die, philo->env->eat, philo->env->sleep, philo->env->state);
-// 	printf("[%p]\n[%p]\n[%p]\n[%p]\n[%p]\n[%p]\n", &philo->env->die_mutex, &philo->env->eat_mutex, &philo->env->sleep_mutex, &philo->env->start_mutex, &philo->env->state_mutex, &philo->env->printer);
-// 	if (philo->env->pop == philo->id)
-// 		return ;
-// 	print_philos(philo + 1);
-// }
 
 static int	set_pop(t_philo *philo, int index)
 {
@@ -48,10 +37,10 @@ static int	set_env(t_env *env, int pop, char **av)
 	env->pop = pop;
 	if (pthread_mutex_init(&env->start_mutex, NULL)
 		||pthread_mutex_init(&env->die_mutex, NULL)
-			|| pthread_mutex_init(&env->eat_mutex, NULL)
-				|| pthread_mutex_init(&env->sleep_mutex, NULL)
-					|| pthread_mutex_init(&env->state_mutex, NULL)
-						|| pthread_mutex_init(&env->printer, NULL))
+		|| pthread_mutex_init(&env->eat_mutex, NULL)
+		|| pthread_mutex_init(&env->sleep_mutex, NULL)
+		|| pthread_mutex_init(&env->state_mutex, NULL)
+		|| pthread_mutex_init(&env->printer, NULL))
 		return (EXIT_FAILURE);
 	env->state = Alive;
 	env->die = ft_atoi(av[1]);
@@ -110,7 +99,5 @@ int	main(int ac, char **av)
 	if (!philo)
 		exit_(EXIT_FAILURE);
 	thread_manager(philo);
-	// print_philos(philo);
-	// read(0, NULL, 1);
 	return (EXIT_SUCCESS);
 }

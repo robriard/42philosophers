@@ -6,15 +6,15 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:25:26 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 13:54:11 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 16:52:04 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int ft_strlen(const char *str)
+int	ft_strlen(const char *str)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (str[len])
@@ -63,7 +63,7 @@ int	is_num(const char *s)
 	return (0);
 }
 
-char		*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*dst;
 	int		i;
@@ -97,28 +97,4 @@ void	print(t_philo *philo, char *msg, time_t now)
 	printf(msg, now, philo->id);
 	pthread_mutex_unlock(&philo->env->printer);
 	free(msg);
-}
-
-time_t get_time(time_t start)
-{
-	struct timeval tv;
-	if (gettimeofday(&tv, NULL) == -1)
-		return (-1);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000 - start);
-}
-
-int	ft_usleep(t_philo *philo, time_t usec)
-{
-	time_t start;
-	start = get_time(philo->env->time_start);
-	while (get_time(philo->env->time_start) - start < usec)
-		usleep(10);
-	return (EXIT_SUCCESS);
-}
-
-void	exit_(int status)
-{
-	if (status != 0)
-		printf("Error\n");
-	exit(status);
 }

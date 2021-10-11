@@ -6,7 +6,7 @@
 #    By: robriard <robriard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/13 11:21:40 by robriard          #+#    #+#              #
-#    Updated: 2021/10/11 14:47:00 by robriard         ###   ########.fr        #
+#    Updated: 2021/10/11 16:52:48 by robriard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,13 +24,14 @@ endif
 
 NAME = philo
 CC = gcc
-FLAGS = -lpthread -Wall -Wextra -Werror -lpthread
+FLAGS = -pthread -Wall -Wextra -Werror
 
 FILES =	main.c 				\
 		daily_actions.c 	\
 		medic.c 			\
 		thread_manager.c 	\
-		tools.c 			
+		tools.c 			\
+		tools2.c
 
 SRCS = $(addprefix ./srcs/, $(FILES))
 OBJS = ${SRCS:.c=.o}

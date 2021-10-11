@@ -6,13 +6,13 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 14:09:23 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 13:53:12 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 16:47:14 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void 	eating(t_philo *philo)
+static void	eating(t_philo *philo)
 {
 	pthread_mutex_lock(philo->rfork);
 	print(philo, "%d has taken a fork\n", get_time(philo->env->time_start));
@@ -35,7 +35,7 @@ static void 	eating(t_philo *philo)
 	pthread_mutex_unlock(philo->rfork);
 }
 
-static void sleeping(t_philo *philo)
+static void	sleeping(t_philo *philo)
 {
 	print(philo, "%d is sleeping\n", get_time(philo->env->time_start));
 	ft_usleep(philo, philo->env->sleep);
@@ -43,11 +43,10 @@ static void sleeping(t_philo *philo)
 
 void	*daily_actions(void *arg)
 {
-	
 	t_philo	*philo;
 
 	philo = (t_philo *) arg;
-	if (philo->env->pop % 2 == 0 && philo->id % 2 == 1) 
+	if (philo->env->pop % 2 == 0 && philo->id % 2 == 1)
 		ft_usleep(philo, 1);
 	else
 	{
@@ -62,7 +61,7 @@ void	*daily_actions(void *arg)
 	while (1)
 	{
 		if (statecmp(philo, Alive))
-			break;
+			break ;
 		eating(philo);
 		sleeping(philo);
 		print(philo, "%d is thinking\n", get_time(philo->env->time_start));

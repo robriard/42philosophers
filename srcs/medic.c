@@ -6,13 +6,13 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 14:45:12 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 16:49:39 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int statecmp(t_philo *philo, unsigned int value)
+int	statecmp(t_philo *philo, unsigned int value)
 {
 	pthread_mutex_lock(&philo->env->state_mutex);
 	if (philo->env->state != value)
@@ -24,32 +24,32 @@ int statecmp(t_philo *philo, unsigned int value)
 	return (EXIT_SUCCESS);
 }
 
-void stateedt(t_philo *philo, unsigned int value)
+void	stateedt(t_philo *philo, unsigned int value)
 {
 	pthread_mutex_lock(&philo->env->state_mutex);
 	philo->env->state = value;
 	pthread_mutex_unlock(&philo->env->state_mutex);
 }
 
-int medic(t_philo *philo)
+int	medic(t_philo *philo)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	
 	while (i >= 0)
 	{
 		pthread_mutex_lock(&philo[i].env->start_mutex);
 		pthread_mutex_lock(&philo[i].last_meal_mutex);
-		if (get_time(philo[i].env->time_start) - philo[i].last_meal > philo[i].env->die)
+		if (get_time(philo[i].env->time_start)
+			- philo[i].last_meal > philo[i].env->die)
 		{
 			print(&philo[i], "%d died\n", get_time(philo->env->time_start));
-			stateedt(&philo[i], Dead);			
+			stateedt(&philo[i], Dead);
 		}
 		pthread_mutex_unlock(&philo[i].last_meal_mutex);
 		pthread_mutex_unlock(&philo[i].env->start_mutex);
 		if (statecmp(&philo[i], Alive))
-			break;
+			break ;
 		i = (i + 1) % philo[i].env->pop;
 	}
 	return (EXIT_SUCCESS);
