@@ -6,13 +6,13 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 14:03:04 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 14:45:12 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int statecmp(t_philo *philo, int value)
+int statecmp(t_philo *philo, unsigned int value)
 {
 	pthread_mutex_lock(&philo->env->state_mutex);
 	if (philo->env->state != value)
@@ -24,7 +24,7 @@ int statecmp(t_philo *philo, int value)
 	return (EXIT_SUCCESS);
 }
 
-void stateedt(t_philo *philo, int value)
+void stateedt(t_philo *philo, unsigned int value)
 {
 	pthread_mutex_lock(&philo->env->state_mutex);
 	philo->env->state = value;
