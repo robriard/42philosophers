@@ -6,22 +6,22 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 15:52:25 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 14:02:54 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 14:44:16 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void print_philos(t_philo *philo)
-{
-	printf("===== [%d] =====\n", philo->id);
-	printf("[%ld]\n[%p]\n[%p]\n\n", philo->max_laps, philo->lfork, philo->rfork);
-	printf("[%d]\n[%lu]\n[%lu]\n[%lu]\n[%u]\n", philo->env->pop, philo->env->die, philo->env->eat, philo->env->sleep, philo->env->state);
-	printf("[%p]\n[%p]\n[%p]\n[%p]\n[%p]\n[%p]\n", &philo->env->die_mutex, &philo->env->eat_mutex, &philo->env->sleep_mutex, &philo->env->start_mutex, &philo->env->state_mutex, &philo->env->printer);
-	if (philo->env->pop == philo->id)
-		return ;
-	print_philos(philo + 1);
-}
+// static void print_philos(t_philo *philo)
+// {
+// 	printf("===== [%d] =====\n", philo->id);
+// 	printf("[%ld]\n[%p]\n[%p]\n\n", philo->max_laps, philo->lfork, philo->rfork);
+// 	printf("[%d]\n[%lu]\n[%lu]\n[%lu]\n[%u]\n", philo->env->pop, philo->env->die, philo->env->eat, philo->env->sleep, philo->env->state);
+// 	printf("[%p]\n[%p]\n[%p]\n[%p]\n[%p]\n[%p]\n", &philo->env->die_mutex, &philo->env->eat_mutex, &philo->env->sleep_mutex, &philo->env->start_mutex, &philo->env->state_mutex, &philo->env->printer);
+// 	if (philo->env->pop == philo->id)
+// 		return ;
+// 	print_philos(philo + 1);
+// }
 
 static int	set_pop(t_philo *philo, int index)
 {
