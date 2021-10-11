@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 13:59:40 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/11 14:46:21 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ time_t	get_time(time_t start_time);
  *		PHILO
  */
 void	*daily_actions(void *arg);
-void 	stateedt(t_philo *philo, int value);
-int 	statecmp(t_philo *philo, int value);
+void 	stateedt(t_philo *philo, unsigned int value);
+int 	statecmp(t_philo *philo, unsigned int value);
 int		thread_manager(t_philo *philo);
 int		medic(t_philo *philo);
 
