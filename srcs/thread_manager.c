@@ -6,11 +6,28 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 16:42:01 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/12 10:45:38 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int	clearing(pthread_t *thread, t_philo *philo)
+{
+	int pop;
+
+	pop = philo[0].env->pop - 1;
+	while (pop >= 0)
+	{
+		if (pop == 0)
+			free(philo[0].env);
+		free(philo[pop].rfork);
+		pop--;
+	}
+	free(philo);
+	free(thread);
+	return (EXIT_SUCCESS);
+}
 
 static int	cleanup(pthread_t *thread, int index)
 {
@@ -38,10 +55,11 @@ int	thread_manager(t_philo *philo)
 	while (i < philo[0].env->pop)
 	{
 		if (pthread_create(&threads[i], NULL, daily_actions, &philo[i]))
-			return (cleanup(threads, i));
+			break ;
 		i++;
 	}
-	medic(philo);
+	if (i == philo[0].env->pop)
+		medic(philo);
 	cleanup(threads, philo[0].env->pop);
-	return (EXIT_SUCCESS);
+	return (clearing(threads, philo));
 }

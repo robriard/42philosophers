@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:25:26 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 16:52:04 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/12 10:46:44 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 void	print(t_philo *philo, char *msg, time_t now)
 {
-	msg = ft_strjoin("%lu: ", msg);
 	if (statecmp(philo, Alive))
 		return ;
+	msg = ft_strjoin("%lu: ", msg);
 	pthread_mutex_lock(&philo->env->printer);
 	printf(msg, now, philo->id);
 	pthread_mutex_unlock(&philo->env->printer);

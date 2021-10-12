@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 16:49:39 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/12 10:33:10 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,16 @@ int	medic(t_philo *philo)
 	i = 0;
 	while (i >= 0)
 	{
-		pthread_mutex_lock(&philo[i].env->start_mutex);
 		pthread_mutex_lock(&philo[i].last_meal_mutex);
+		pthread_mutex_lock(&philo[i].env->start_mutex);
 		if (get_time(philo[i].env->time_start)
 			- philo[i].last_meal > philo[i].env->die)
 		{
-			print(&philo[i], "%d died\n", get_time(philo->env->time_start));
 			stateedt(&philo[i], Dead);
+			pthread_mutex_lock(&philo->env->printer);
+			printf("%lu: %d died\n", get_time(philo->env->time_start),
+				philo->id);
+			pthread_mutex_unlock(&philo->env->printer);
 		}
 		pthread_mutex_unlock(&philo[i].last_meal_mutex);
 		pthread_mutex_unlock(&philo[i].env->start_mutex);

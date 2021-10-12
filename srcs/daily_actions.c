@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 14:09:23 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 16:47:14 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/12 10:33:49 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ static void	eating(t_philo *philo)
 	pthread_mutex_lock(&philo->last_meal_mutex);
 	pthread_mutex_lock(&philo->env->start_mutex);
 	philo->last_meal = get_time(philo->env->time_start);
-	pthread_mutex_unlock(&philo->env->start_mutex);
 	pthread_mutex_unlock(&philo->last_meal_mutex);
+	pthread_mutex_unlock(&philo->env->start_mutex);
 	print(philo, "%d is eating\n", get_time(philo->env->time_start));
 	ft_usleep(philo, philo->env->eat);
 	if (philo->max_laps > 0)
