@@ -6,21 +6,34 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/12 10:45:38 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/14 10:09:22 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+static void env_destroy(t_env *env)
+{
+	pthread_mutex_destroy(&env->die_mutex);
+	pthread_mutex_destroy(&env->eat_mutex);
+	pthread_mutex_destroy(&env->sleep_mutex);
+	pthread_mutex_destroy(&env->state_mutex);
+	pthread_mutex_destroy(&env->start_mutex);
+	pthread_mutex_destroy(&env->printer);
+	free(env);
+}
+
 static int	clearing(pthread_t *thread, t_philo *philo)
 {
-	int pop;
+	int	pop;
 
 	pop = philo[0].env->pop - 1;
 	while (pop >= 0)
 	{
 		if (pop == 0)
-			free(philo[0].env);
+			env_destroy(philo[0].env);
+		pthread_mutex_destroy(&philo[pop].laps_mutex);
+		pthread_mutex_destroy(philo[pop].rfork);
 		free(philo[pop].rfork);
 		pop--;
 	}
@@ -51,6 +64,12 @@ int	thread_manager(t_philo *philo)
 	if (!threads)
 		return (EXIT_FAILURE);
 	philo[0].env->time_start = get_time(0);
+	if (philo[0].env->pop == 1)
+	{
+		ft_usleep(&philo[0], philo[0].env->die);
+		print(&philo[0], "%lu: 1 died\n", get_time(philo[0].env->time_start));
+		return (clearing(threads, philo));
+	}
 	i = 0;
 	while (i < philo[0].env->pop)
 	{

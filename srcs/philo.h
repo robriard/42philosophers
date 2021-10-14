@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 16:41:01 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/13 10:47:37 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,17 @@
 
 typedef pthread_mutex_t	t_mutex;
 
+# ifndef ACTIONS
+#  define ACTIONS
+#  define TAKE 0
+#  define DROP 1
+# endif
+
 # ifndef LIMITS
 #  define LIMITS
 #  define MAX_POP 300
 #  define MAX_ARGS 6
-#  define MIN_POP 0
+#  define MIN_POP 1
 #  define MIN_ARGS 5
 # endif
 
@@ -36,7 +42,7 @@ typedef enum e_state
 {
 	Alive = 0,
 	Dead = 1,
-	Finished = 2
+	Finish= 2
 }			t_state;
 
 typedef struct s_env
@@ -58,11 +64,12 @@ typedef struct s_env
 typedef struct s_philo
 {
 	int			id;
-	long int	max_laps;
+	t_mutex		laps_mutex;
+	long int	laps;
 	t_mutex		*lfork;
 	t_mutex		*rfork;
-	t_mutex		last_meal_mutex;
 	time_t		last_meal;
+	bool		finish;
 	t_env		*env;
 }				t_philo;
 

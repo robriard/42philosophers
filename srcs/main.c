@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 15:52:25 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/11 16:45:11 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/14 11:15:21 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ static int	set_pop(t_philo *philo, int index)
 	if (index == 0)
 		return (set_pop(philo, index + 1));
 	philo[index].id = index + 1;
-	philo[index].max_laps = philo[index - 1].max_laps;
+	philo[index].laps = philo[index - 1].laps;
 	philo[index].lfork = philo[index - 1].rfork;
 	philo[index].rfork = malloc(sizeof(t_mutex));
-	if (!philo[index].rfork || pthread_mutex_init(philo[index].rfork, NULL))
+	if (!philo[index].rfork || pthread_mutex_init(philo[index].rfork, NULL)
+		|| pthread_mutex_init(&philo[index].laps_mutex, NULL))
 		return (EXIT_FAILURE);
-	if (pthread_mutex_init(&philo->last_meal_mutex, NULL))
-		return (EXIT_FAILURE);
+	philo[index].finish = false;
 	philo[index].env = philo[index - 1].env;
 	if (index == philo[index].env->pop - 1)
 		philo[0].lfork = philo[index].rfork;
@@ -51,16 +51,15 @@ static int	set_env(t_env *env, int pop, char **av)
 	return (EXIT_SUCCESS);
 }
 
-static int	set_first(t_philo *philo, long unsigned int max_laps)
+static int	set_first(t_philo *philo, long unsigned int laps)
 {
 	philo->id = 1;
-	philo->max_laps = max_laps;
-	if (pthread_mutex_init(&philo->last_meal_mutex, NULL))
-		return (EXIT_FAILURE);
+	philo->laps = laps;
 	philo->rfork = malloc(sizeof(t_mutex));
 	if (!philo->rfork || pthread_mutex_init(philo->rfork, NULL)
-		|| pthread_mutex_init(&philo->last_meal_mutex, NULL))
+		|| pthread_mutex_init(&philo->laps_mutex, NULL))
 		return (EXIT_FAILURE);
+	philo->finish = false;
 	philo->env = malloc(sizeof(t_env));
 	if (!philo->env)
 		return (EXIT_FAILURE);
@@ -71,17 +70,21 @@ t_philo	*init(int ac, char **av)
 {
 	t_philo				*philo;
 	int					pop;
-	long unsigned int	max_laps;
+	long int			laps;
 
 	pop = ft_atoi(av[0]);
-	if (pop < MIN_POP || pop >= MAX_POP)
+	if (pop < MIN_POP || pop > MAX_POP)
 		return (NULL);
 	if (ac == 5)
-		max_laps = ft_atoi(av[4]);
+	{
+		laps = ft_atoi(av[4]);
+		if (laps < 0)
+			return (NULL);
+	}
 	else
-		max_laps = -1;
+		laps = -1;
 	philo = malloc(sizeof(t_philo) * pop);
-	if (!philo || set_first(&philo[0], max_laps))
+	if (!philo || set_first(&philo[0], laps))
 		return (NULL);
 	if (set_env(philo[0].env, pop, av))
 		return (NULL);
