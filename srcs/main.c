@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 15:52:25 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/14 11:15:21 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:06:05 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ static int	set_env(t_env *env, int pop, char **av)
 	env->die = ft_atoi(av[1]);
 	env->eat = ft_atoi(av[2]);
 	env->sleep = ft_atoi(av[3]);
-	if (env->die <= 0 || env->eat <= 0 || env->sleep <= 0)
+	if (ft_isnum(av[1]) || env->die <= 0
+		|| ft_isnum(av[2]) || env->eat <= 0
+		|| ft_isnum(av[3]) || env->sleep <= 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
@@ -73,12 +75,12 @@ t_philo	*init(int ac, char **av)
 	long int			laps;
 
 	pop = ft_atoi(av[0]);
-	if (pop < MIN_POP || pop > MAX_POP)
+	if (ft_isnum(av[0]) || pop < MIN_POP || pop > MAX_POP)
 		return (NULL);
 	if (ac == 5)
 	{
 		laps = ft_atoi(av[4]);
-		if (laps < 0)
+		if (ft_isnum(av[4]) || laps < 0)
 			return (NULL);
 	}
 	else

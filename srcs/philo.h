@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/13 10:47:37 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:04:13 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct s_philo
  *		TOOLS
  */
 int		ft_usleep(t_philo *philo, time_t usec);
-int		is_num(const char *s);
+int		ft_isnum(char *nb);
 void	exit_(int status);
 void	print(t_philo *philo, char *msg, time_t now);
 time_t	ft_atoi(const char *s);

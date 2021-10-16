@@ -6,13 +6,13 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/14 10:09:22 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:07:21 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void env_destroy(t_env *env)
+static void	env_destroy(t_env *env)
 {
 	pthread_mutex_destroy(&env->die_mutex);
 	pthread_mutex_destroy(&env->eat_mutex);
@@ -63,14 +63,8 @@ int	thread_manager(t_philo *philo)
 	threads = malloc(sizeof(pthread_t) * philo[0].env->pop);
 	if (!threads)
 		return (EXIT_FAILURE);
-	philo[0].env->time_start = get_time(0);
-	if (philo[0].env->pop == 1)
-	{
-		ft_usleep(&philo[0], philo[0].env->die);
-		print(&philo[0], "%lu: 1 died\n", get_time(philo[0].env->time_start));
-		return (clearing(threads, philo));
-	}
 	i = 0;
+	philo[0].env->time_start = get_time(0);
 	while (i < philo[0].env->pop)
 	{
 		if (pthread_create(&threads[i], NULL, daily_actions, &philo[i]))

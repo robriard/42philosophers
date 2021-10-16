@@ -6,11 +6,25 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 16:52:15 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/13 15:04:03 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:06:52 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_isnum(char *nb)
+{
+	int	i;
+
+	i = 0;
+	while (nb[i])
+	{
+		if (!(nb[i] >= '0' && nb[i] <= '9'))
+			return (EXIT_FAILURE);
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
 
 time_t	get_time(time_t start)
 {
