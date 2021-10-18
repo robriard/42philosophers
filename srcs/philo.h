@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 11:39:17 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/16 10:04:13 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/17 17:44:28 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,11 @@ typedef enum e_state
 typedef struct s_env
 {
 	int		pop;
+	t_mutex	sync_mutex;
 	t_mutex	start_mutex;
 	time_t	time_start;
-	t_mutex	die_mutex;
 	time_t	die;
-	t_mutex	eat_mutex;
 	time_t	eat;
-	t_mutex	sleep_mutex;
 	time_t	sleep;
 	t_mutex	state_mutex;
 	t_state	state;

@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 11:52:12 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/16 10:09:24 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:28:49 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	medic(t_philo *philo)
 	i = 0;
 	while (i >= 0)
 	{
+		usleep(200);
 		finished += check_meal(&philo[i]);
 		pthread_mutex_lock(&philo[i].env->start_mutex);
 		if (get_time(philo[i].env->time_start)

@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 15:52:25 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/16 10:06:05 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/17 17:44:44 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ static int	set_env(t_env *env, int pop, char **av)
 {
 	env->pop = pop;
 	if (pthread_mutex_init(&env->start_mutex, NULL)
-		||pthread_mutex_init(&env->die_mutex, NULL)
-		|| pthread_mutex_init(&env->eat_mutex, NULL)
-		|| pthread_mutex_init(&env->sleep_mutex, NULL)
+		|| pthread_mutex_init(&env->sync_mutex, NULL)
 		|| pthread_mutex_init(&env->state_mutex, NULL)
 		|| pthread_mutex_init(&env->printer, NULL))
 		return (EXIT_FAILURE);

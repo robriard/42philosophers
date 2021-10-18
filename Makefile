@@ -6,7 +6,7 @@
 #    By: robriard <robriard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/13 11:21:40 by robriard          #+#    #+#              #
-#    Updated: 2021/10/12 13:54:57 by robriard         ###   ########.fr        #
+#    Updated: 2021/10/17 19:20:17 by robriard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,8 @@ SRCS = $(addprefix ./srcs/, $(FILES))
 OBJS = ${SRCS:.c=.o}
 DEP = $(OBJS:%.o=%.d)
 
+all: ${NAME}
+
 -include $(DEP)
 %.o: %.c
 	@printf "\e[2K\r- $@ [🔄]"
@@ -47,7 +49,6 @@ ${NAME}: ${OBJS}
 	@${CC} ${FLAGS} ${OBJS}  -o ${NAME}
 	@echo "${GREEN}Compilation OK${RESET}"
 
-all: ${NAME}
 
 clean:
 	@echo "${RED}deleting ojbects${RESET}"

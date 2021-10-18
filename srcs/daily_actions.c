@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 14:09:23 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/16 10:13:55 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:29:31 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,18 @@ void	*daily_actions(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *) arg;
+	pthread_mutex_lock(&philo->env->sync_mutex);
+	pthread_mutex_unlock(&philo->env->sync_mutex);
 	swapper(philo);
 	if (philo[0].env->pop == 1)
 		return (only_one(philo));
 	pthread_mutex_lock(&philo->env->start_mutex);
 	philo->last_meal = get_time(philo->env->time_start);
 	pthread_mutex_unlock(&philo->env->start_mutex);
-	while (!statecmp(philo, Alive))
+	while (1)
 	{
+		if (statecmp(philo, Alive))
+			break ;
 		eating(philo);
 		print(philo, "%lu: %d is sleeping\n", get_time(philo->env->time_start));
 		ft_usleep(philo, philo->env->sleep);

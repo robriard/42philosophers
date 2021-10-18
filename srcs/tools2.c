@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 16:52:15 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/16 10:06:52 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/17 21:21:25 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ time_t	get_time(time_t start)
 {
 	struct timeval	tv;
 
-	if (gettimeofday(&tv, NULL) == -1)
+	if (gettimeofday(&tv, NULL) == -1)	
 		return (-1);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000 - start);
 }
@@ -41,7 +41,11 @@ int	ft_usleep(t_philo *philo, time_t usec)
 
 	start = get_time(philo->env->time_start);
 	while (get_time(philo->env->time_start) - start < usec)
-		usleep(10);
+	{
+		if (statecmp(philo, Alive))
+			return (EXIT_FAILURE);
+		usleep(100);
+	}
 	return (EXIT_SUCCESS);
 }
 

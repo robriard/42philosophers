@@ -6,7 +6,7 @@
 /*   By: robriard <robriard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 11:14:38 by robriard          #+#    #+#             */
-/*   Updated: 2021/10/16 10:07:21 by robriard         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:29:22 by robriard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 static void	env_destroy(t_env *env)
 {
-	pthread_mutex_destroy(&env->die_mutex);
-	pthread_mutex_destroy(&env->eat_mutex);
-	pthread_mutex_destroy(&env->sleep_mutex);
 	pthread_mutex_destroy(&env->state_mutex);
+	pthread_mutex_destroy(&env->sync_mutex);
 	pthread_mutex_destroy(&env->start_mutex);
 	pthread_mutex_destroy(&env->printer);
 	free(env);
@@ -65,12 +63,14 @@ int	thread_manager(t_philo *philo)
 		return (EXIT_FAILURE);
 	i = 0;
 	philo[0].env->time_start = get_time(0);
+	pthread_mutex_lock(&philo[0].env->sync_mutex);
 	while (i < philo[0].env->pop)
 	{
 		if (pthread_create(&threads[i], NULL, daily_actions, &philo[i]))
 			break ;
 		i++;
 	}
+	pthread_mutex_unlock(&philo[0].env->sync_mutex);
 	if (i == philo[0].env->pop)
 		medic(philo);
 	cleanup(threads, philo[0].env->pop);
