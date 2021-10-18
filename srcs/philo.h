@@ -32,7 +32,8 @@ typedef pthread_mutex_t	t_mutex;
 
 # ifndef LIMITS
 #  define LIMITS
-#  define MAX_POP 300
+#  define INT_MAX 2147483647
+#  define MAX_POP 200
 #  define MAX_ARGS 6
 #  define MIN_POP 1
 #  define MIN_ARGS 5

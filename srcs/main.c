@@ -44,9 +44,9 @@ static int	set_env(t_env *env, int pop, char **av)
 	env->die = ft_atoi(av[1]);
 	env->eat = ft_atoi(av[2]);
 	env->sleep = ft_atoi(av[3]);
-	if (ft_isnum(av[1]) || env->die <= 0
-		|| ft_isnum(av[2]) || env->eat <= 0
-		|| ft_isnum(av[3]) || env->sleep <= 0)
+	if (ft_isnum(av[1]) || env->die <= 0 || env->die > INT_MAX
+		|| ft_isnum(av[2]) || env->eat <= 0 || env->eat > INT_MAX
+		|| ft_isnum(av[3]) || env->sleep <= 0 || env->sleep > INT_MAX)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
@@ -78,7 +78,7 @@ t_philo	*init(int ac, char **av)
 	if (ac == 5)
 	{
 		laps = ft_atoi(av[4]);
-		if (ft_isnum(av[4]) || laps < 0)
+		if (ft_isnum(av[4]) || laps < 0 || laps > INT_MAX)
 			return (NULL);
 	}
 	else

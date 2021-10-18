@@ -15,7 +15,7 @@
 static void	swapper(t_philo *philo)
 {
 	if (philo->env->pop % 2 == 0 && philo->id % 2 == 1)
-		ft_usleep(philo, 1);
+		ft_usleep(philo, philo->env->eat);
 	else if (philo->env->pop % 2 == 1)
 	{
 		if (philo->id % 3 == 1)
